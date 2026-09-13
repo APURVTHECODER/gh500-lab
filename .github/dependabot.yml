@@ -1,13 +1,14 @@
 version: 2
 
 updates:
-  groups:
-    development-dependencies:
-      dependency-type: "development"
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "daily"
+
+    groups:
+      development-dependencies:
+        dependency-type: "development"
 
     ignore:
       - dependency-name: "lodash"
