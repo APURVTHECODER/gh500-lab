@@ -1,1 +1,12 @@
-
+{
+  "name": "gh500-lab",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "dependencies": {
+    "lodash": "4.17.20",
+    "express": "4.17.1"
+  }
+}
