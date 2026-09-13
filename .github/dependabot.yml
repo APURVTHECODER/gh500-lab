@@ -5,4 +5,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    open-pull-requests-limit: 0
+
+    ignore:
+      - dependency-name: "lodash"
+        versions:
+          - ">= 5.0.0"
