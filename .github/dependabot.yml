@@ -3,12 +3,104 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
+
+    # How often Dependabot checks for version updates.
     schedule:
       interval: "daily"
-    open-pull-requests-limit: 0
 
-  - package-ecosystem: "pip"
-    directory: "/backend"
-    schedule:
-      interval: "weekly"
+    # Maximum open VERSION-UPDATE PRs.
+    # 0 = disable version-update PRs for npm.
+    # SECURITY-UPDATE PRs are not subject to this limit.
     open-pull-requests-limit: 5
+
+    # Delay newly released versions before considering them.
+    # Cooldown applies to VERSION updates, not security updates.
+    cooldown:
+      default-days: 3
+      semver-major-days: 7
+      semver-minor-days: 3
+      semver-patch-days: 1
+      include:
+        - "lodash"
+        - "express"
+      exclude:
+        - "eslint"
+
+    # Allow only specific candidates.
+    allow:
+      - dependency-name: "lodash"
+      - dependency-name: "express"
+      - dependency-type: "development"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
+
+    # Filter candidates back out after allow.
+    ignore:
+      - dependency-name: "lodash"
+        versions:
+          - ">= 5.0.0"
+
+      - dependency-name: "express"
+        update-types:
+          - "version-update:semver-major"
+
+    # Group NORMAL VERSION updates.
+    groups:
+      production-minor-patch:
+        applies-to: "version-updates"
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "express"
+          - "lodash"
+        exclude-patterns:
+          - "lodash-es"
+
+      development:
+        applies-to: "version-updates"
+        dependency-type: "development"
+        patterns:
+          - "*"
+
+      # Group SECURITY updates separately.
+      security-updates:
+        applies-to: "security-updates"
+        patterns:
+          - "*"
+
+    # Exclude files/directories from this update scan.
+    exclude-paths:
+      - "vendor/**"
+      - "test/**"
+
+    # How Dependabot modifies manifest constraints.
+    versioning-strategy: "increase"
+
+    # Automatically rebase Dependabot PRs when necessary.
+    rebase-strategy: "auto"
+
+    # Labels to apply to Dependabot PRs.
+    labels:
+      - "dependencies"
+      - "dependabot"
+
+    # Assign Dependabot PRs.
+    assignees:
+      - "YOUR_GITHUB_USERNAME"
+
+    # Customize commit / PR title style.
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
+
+    # Customize Dependabot branch names.
+    pull-request-branch-name:
+      prefix: "dependabot"
+      separator: "/"
+      max-length: 100
+      word-separator: "-"
+      branch-name-case: "lowercase"
